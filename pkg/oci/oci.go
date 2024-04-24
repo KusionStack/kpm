@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/thoas/go-funk"
@@ -116,7 +117,9 @@ func NewOciClient(regName, repoName string, settings *settings.Settings) (*OciCl
 	}
 	ctx := context.Background()
 	repo.PlainHTTP = settings.DefaultOciPlainHttp()
-
+	if len(strings.Split(regName, ":")) == 2 {
+		repo.PlainHTTP = true
+	}
 	// Login
 	credential, err := loadCredential(regName, settings)
 	if err != nil {
